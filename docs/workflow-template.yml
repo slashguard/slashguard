@@ -1,0 +1,141 @@
+# SlashGuard CI/CD Workflow Template
+# Copy this file to .github/workflows/slashguard-review.yml in your repo.
+# Set three secrets: ANTHROPIC_API_KEY, SG_LICENSE_DAT, SG_REPO_TOKEN
+# See docs/ci-setup.md for full setup instructions.
+
+name: SlashGuard Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+  id-token: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+      - name: Setup SlashGuard
+        run: |
+          SG_HOME="$HOME/.slashguard"
+
+          gh release download latest \
+            --repo itsware-inc/slashguard \
+            --pattern 'slashguard-linux-amd64.zip' \
+            --dir /tmp
+          unzip -o /tmp/slashguard-linux-amd64.zip -d "$SG_HOME"
+          chmod +x "$SG_HOME/bin/sg"
+
+          echo "$SG_LICENSE_DAT" | base64 -d > "$SG_HOME/license.dat"
+
+          REPO_NAME="${GITHUB_REPOSITORY##*/}"
+          WORKSPACE="/home/runner/work/$REPO_NAME/$REPO_NAME"
+
+          cat > /tmp/sg-mcp-config.json <<EOF
+          {
+            "mcpServers": {
+              "slashguard": {
+                "command": "$SG_HOME/bin/sg",
+                "args": ["serve", "--repo", "$WORKSPACE"],
+                "env": {
+                  "CI": "true",
+                  "GITHUB_ACTIONS": "true",
+                  "LICENSE_FILE": "$SG_HOME/license.dat",
+                  "PACKS_DIR": "$SG_HOME/packs",
+                  "CACHE_DIR": "$WORKSPACE/.sg-cache",
+                  "SG_HEADLESS": "1",
+                  "SG_EDITOR": "claude-code",
+                  "HOME": "$HOME"
+                }
+              }
+            }
+          }
+          EOF
+        env:
+          GH_TOKEN: ${{ secrets.SG_REPO_TOKEN }}
+          SG_LICENSE_DAT: ${{ secrets.SG_LICENSE_DAT }}
+
+      - name: SlashGuard Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          show_full_output: "true"
+          prompt: |
+            You are a CI code reviewer. Use SlashGuard MCP tools to review, then post results via Bash.
+            CRITICAL: The action's built-in comment mechanism is broken. You MUST use Bash with the gh CLI to post all reviews. Never just write text output.
+
+            STEP 1 — Start session:
+            Call mcp__slashguard__review_start with mode="diff", ref="HEAD", base="origin/${{ github.event.pull_request.base.ref }}", repo=<current working directory>.
+            Save session_id and chunk_count.
+
+            STEP 2 — Checks (lint):
+            Call mcp__slashguard__review_scan with session_id and batch_size=100. Repeat until lint_done=true.
+            Save gate_violations, warnings, suppressed_count, stale_suppressions from the final response.
+            Save all batch_findings from every scan call — you need them for posting.
+
+            STEP 3 — Post checks review (immediately after lint, do NOT wait for AI):
+            If there are any active findings (gate_violations > 0 OR warnings > 0), post a checks review NOW.
+            Build a JSON file with ALL check findings as inline comments, then post ONE review via the batch API.
+
+            Use Bash to create /tmp/checks_comments.json:
+            [
+              {"path": "FILE", "line": LINE, "body": "**CODE** (severity)\n\nDescription.\n\n```suggestion\nSOURCE_LINE // sg:suppress CODE\n```\n\n<details><summary>Alternative: suppress via .sgsuppress.yaml</summary>\n\n```yaml\nSUPPRESS_YAML\n```\n</details>"}
+            ]
+
+            For each finding: use the source_line field as-is for the suggestion block (append " // sg:suppress CODE").
+            If source_line is empty, omit the suggestion block and keep only the .sgsuppress.yaml instructions.
+            Use the suppress_yaml field verbatim for the YAML block.
+
+            Then post via Bash:
+            gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+              -f commit_id="${{ github.event.pull_request.head.sha }}" \
+              -f event="REQUEST_CHANGES_OR_COMMENT" \
+              -f body="SUMMARY" \
+              --input /tmp/checks_comments.json
+
+            Set event to REQUEST_CHANGES if gate_violations > 0, COMMENT if warnings only.
+            Summary: "## SlashGuard Checks\n\nErrors: N | Warnings: N | Suppressed: N | Stale: N\n\nVerdict: GATE_RESULT"
+
+            If zero active findings (all suppressed or clean), skip this review entirely.
+
+            GATE: If gate_violations > 0, STOP here. Do not proceed to AI assessment.
+
+            STEP 4 — AI assessment (only if gate_violations == 0 AND chunk_count > 0):
+            Call mcp__slashguard__review_assess with session_id. Evaluate functions against ai_rules.
+            Submit verdicts via mcp__slashguard__review_report. Repeat until complete.
+
+            STEP 5 — Post AI assessment review:
+            Collect all FAIL verdicts. Build /tmp/ai_comments.json in the same format as checks.
+            Post a SEPARATE review (second review = second email):
+
+            gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+              -f commit_id="${{ github.event.pull_request.head.sha }}" \
+              -f event="APPROVE_OR_COMMENT" \
+              -f body="SUMMARY" \
+              --input /tmp/ai_comments.json
+
+            Set event to APPROVE if no FAIL verdicts, COMMENT if there are failures.
+            Summary: "## SlashGuard AI Assessment\n\nFindings: N\n\nVerdict: RESULT"
+
+            IMPORTANT NOTES:
+            - Post checks and AI as TWO SEPARATE reviews (two gh api calls). Never combine them.
+            - Use the batch reviews API with --input for the comments array. Never post individual comments.
+            - The suggestion block gives users a one-click "Commit suggestion" button to suppress.
+            - Findings are pre-filtered by .sgsuppress.yaml. suppressed_count shows how many were filtered.
+          claude_args: |
+            --mcp-config /tmp/sg-mcp-config.json
+            --allowedTools "Bash,mcp__slashguard__review_start,mcp__slashguard__review_scan,mcp__slashguard__review_assess,mcp__slashguard__review_report,mcp__slashguard__look,mcp__slashguard__info,mcp__slashguard__triage"

@@ -37,6 +37,16 @@ Activate your license: `sg license activate YOUR_KEY`
 
 [Full install guide](INSTALL.md) | [Usage guide](USAGE.md)
 
+## GitHub Actions CI
+
+Automated code review on every pull request — no IDE needed.
+
+1. Copy [workflow template](docs/workflow-template.yml) to `.github/workflows/slashguard-review.yml`
+2. Set 3 secrets: `ANTHROPIC_API_KEY`, `SG_LICENSE_DAT`, `SG_REPO_TOKEN`
+3. Open a PR — SlashGuard reviews automatically
+
+See [CI Setup Guide](docs/ci-setup.md) for full instructions.
+
 ## Downloads
 
 | Platform | File |
