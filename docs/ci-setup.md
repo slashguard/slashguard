@@ -191,6 +191,6 @@ These are planned but not yet implemented:
 
 ## Reference
 
-- **Working example:** [itsware-inc/slashguard-ci-test](https://github.com/itsware-inc/slashguard-ci-test) (PR #1 has live review comments)
+
 - **Claude Code Action docs:** [github.com/anthropics/claude-code-action](https://github.com/anthropics/claude-code-action)
 - **Workflow template:** `docs/workflow-template.yml` in this repo
