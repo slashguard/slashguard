@@ -92,7 +92,7 @@ Copy the `.sgpack` files to `%LOCALAPPDATA%\SlashGuard\packs\`.
 
 ### Cursor
 
-Edit `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per-workspace):
+Edit `~/.cursor/mcp.json` (global):
 
 ```json
 {
@@ -184,7 +184,7 @@ claude mcp add --scope user slashguard -e SG_EDITOR=claude-code -- ~/.slashguard
 
 ### Windows (any editor)
 
-Use the full Windows path (with double backslashes in JSON) in the config. Edit `.cursor\mcp.json` (per-workspace) or `%APPDATA%\Cursor\User\globalStorage\mcp.json` (global):
+Use the full Windows path (with double backslashes in JSON). Edit the global config (`%APPDATA%\Cursor\User\globalStorage\mcp.json`):
 
 ```json
 {

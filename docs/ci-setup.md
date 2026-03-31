@@ -28,8 +28,10 @@ Your repo needs three secrets:
 | Secret | What | How to get it |
 |--------|------|---------------|
 | `ANTHROPIC_API_KEY` | Anthropic API key | [console.anthropic.com](https://console.anthropic.com/) |
-| `SG_LICENSE_DAT` | Base64-encoded SlashGuard license | `base64 < ~/.slashguard/license.dat \| tr -d '\n'` |
+| `SG_LICENSE_DAT` | Base64-encoded SlashGuard CI license | Provided by ItsWare — org-bound to your GitHub org |
 | `SG_REPO_TOKEN` | GitHub PAT with read access to `itsware-inc/slashguard` | [github.com/settings/tokens](https://github.com/settings/tokens) |
+
+> **CI licenses are org-bound.** Each license is tied to a specific GitHub organization via `GITHUB_REPOSITORY_OWNER`. A license activated for `acme-corp` will only work in repos under `acme-corp/*`. Contact ItsWare for your org's license.
 
 Set them via CLI:
 ```bash

@@ -108,23 +108,56 @@ Also check env vars (`CURSOR_*`, `CLAUDE_*`, `WINDSURF_*`) as fallback.
    }
    ```
 
+   **Windows — all IDEs:** Use resolved absolute paths. `~` and `%VARS%` are NOT expanded in JSON config values.
+   Resolve the install directory first (e.g. `%LOCALAPPDATA%\SlashGuard`), then use the full path with double backslashes:
+   ```json
+   {
+     "mcpServers": {
+       "slashguard": {
+         "command": "C:\\Users\\<USERNAME>\\AppData\\Local\\SlashGuard\\bin\\sg.exe",
+         "args": ["serve"],
+         "env": { "SG_EDITOR": "cursor" }
+       }
+     }
+   }
+   ```
+   Replace `<USERNAME>` with the actual Windows username (resolve via `$env:USERNAME` or `%USERNAME%`).
+   Omit `SG_LOG_FILE` on Windows — the binary auto-detects the log path.
+   The config file location is the same as above per IDE.
+
    **Merge, don't overwrite** — if the config file already exists, merge the `slashguard` entry into the existing `mcpServers` object.
 
-5. Clean up old install locations (from pre-v0.9.5):
+5. **Clean up project-level SlashGuard config** (if present):
+
+   Previous versions may have installed SlashGuard at the project level instead of globally. Check and clean up:
+
+   **MCP config (auto-remove):**
+   - **Cursor:** If `.cursor/mcp.json` in the project root contains a `"slashguard"` entry, remove that entry from the file. If `slashguard` was the only server, delete `.cursor/mcp.json` entirely. (The global config at `~/.cursor/mcp.json` is sufficient.)
+   - **Claude Code:** If `.claude.json` in the project root contains a `"slashguard"` MCP entry, remove it.
+   - **Windsurf:** If `.windsurf/mcp.json` in the project root contains a `"slashguard"` entry, remove it.
+
+   **Rule files (warn only):**
+   - **Cursor:** If `.cursor/rules/slashguard-*.mdc` files exist in the project, tell the user: "Found project-level SlashGuard rules. These can be removed since SlashGuard is now installed globally. Remove them? [recommend: yes]"
+   - **Claude Code:** If `.claude/rules/slashguard-*.md` files exist in the project, warn similarly.
+   - **Windsurf:** If `.windsurf/rules/slashguard-*.md` files exist in the project, warn similarly.
+
+   If no project-level config is found, skip silently.
+
+6. Clean up old install locations (from pre-v0.9.5):
    ```bash
    rm -f ~/.local/bin/sg
    rm -f ~/.local/bin/*.sgpack
    rm -rf ~/.local/templates/
    ```
 
-6. **License activation** — ask the user before restarting:
+7. **License activation** — ask the user before restarting:
    Ask: "Do you have a SlashGuard license key? (Enter key or type 'skip')"
    - If user provides a key: run `~/.slashguard/bin/sg license activate <key>` via shell. Show the result.
      - Success: "License activated! Expires: <date>."
-     - Failure: show error, continue to step 7 anyway.
+     - Failure: show error, continue to step 8 anyway.
    - If user skips: "No license set. You can activate later with 'configure SlashGuard'."
 
-7. **IMPORTANT — Tell user to restart their IDE:**
+8. **IMPORTANT — Tell user to restart their IDE:**
    Tell the user: "SlashGuard installed successfully. **Please restart your IDE** (close and reopen Claude Code / Cursor / Windsurf) to connect the SlashGuard MCP server."
    
    The MCP server config was just created — the IDE must restart to pick it up. Do NOT try to use `sg` CLI commands as a workaround. Do NOT try to run reviews until the user has restarted and MCP is connected.
@@ -194,10 +227,26 @@ If version check fails, diagnose the cause:
      - **Cursor:** `rules/slashguard-review.mdc`, `rules/slashguard-setup.mdc`, `rules/slashguard-guard.mdc` → `.cursor/rules/`
      - **Claude Code:** `rules/claude-code/slashguard-review.md`, `rules/claude-code/slashguard-setup.md`, `rules/claude-code/slashguard-guard.md` → `.claude/rules/`
      - **Windsurf:** `rules/windsurf/slashguard-review.md`, `rules/windsurf/slashguard-setup.md`, `rules/windsurf/slashguard-guard.md` → `.windsurf/rules/`
-7. Clean up old locations (if present): `~/.local/bin/sg`, `~/.local/templates/`
-8. Restart MCP if it was running
+7. **Clean up project-level SlashGuard config** (if present):
 
-9. **License check** — at the end of update:
+   Previous versions may have installed SlashGuard at the project level instead of globally. Check and clean up:
+
+   **MCP config (auto-remove):**
+   - **Cursor:** If `.cursor/mcp.json` in the project root contains a `"slashguard"` entry, remove that entry from the file. If `slashguard` was the only server, delete `.cursor/mcp.json` entirely. (The global config at `~/.cursor/mcp.json` is sufficient.)
+   - **Claude Code:** If `.claude.json` in the project root contains a `"slashguard"` MCP entry, remove it.
+   - **Windsurf:** If `.windsurf/mcp.json` in the project root contains a `"slashguard"` entry, remove it.
+
+   **Rule files (warn only):**
+   - **Cursor:** If `.cursor/rules/slashguard-*.mdc` files exist in the project, tell the user: "Found project-level SlashGuard rules. These can be removed since SlashGuard is now installed globally. Remove them? [recommend: yes]"
+   - **Claude Code:** If `.claude/rules/slashguard-*.md` files exist in the project, warn similarly.
+   - **Windsurf:** If `.windsurf/rules/slashguard-*.md` files exist in the project, warn similarly.
+
+   If no project-level config is found, skip silently.
+
+8. Clean up old locations (if present): `~/.local/bin/sg`, `~/.local/templates/`
+9. Restart MCP if it was running
+
+10. **License check** — at the end of update:
    ```bash
    sg license status
    ```
