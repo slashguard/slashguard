@@ -44,15 +44,15 @@ Enable SlashGuard for your session to get faster code navigation and lower token
 ## Quick Start
 
 **Option 1** - Tell your AI agent:
-> Read https://github.com/itsware-inc/slashguard and install SlashGuard
+> Read https://github.com/slashguard/slashguard and install SlashGuard
 
 **Option 2** - Point your agent to the setup skill for your editor:
 
 | Editor | Setup Skill |
 |--------|-------------|
-| Cursor | [slashguard-setup.mdc](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup.mdc) |
-| Claude Code | [slashguard-setup-claude.md](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-claude.md) |
-| Windsurf | [slashguard-setup-windsurf.md](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-windsurf.md) |
+| Cursor | [slashguard-setup.mdc](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup.mdc) |
+| Claude Code | [slashguard-setup-claude.md](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-claude.md) |
+| Windsurf | [slashguard-setup-windsurf.md](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-windsurf.md) |
 
 Copy the link, paste it to your agent, and say **"read this and install SlashGuard"**.
 

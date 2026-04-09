@@ -10,9 +10,9 @@ Point your AI agent to the setup skill for your editor:
 
 | Editor | Setup Skill |
 |--------|-------------|
-| Cursor (.mdc rule) | `https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup.mdc` |
-| Claude Code (.md skill) | `https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-claude.md` |
-| Windsurf (.md rule) | `https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-windsurf.md` |
+| Cursor (.mdc rule) | `https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup.mdc` |
+| Claude Code (.md skill) | `https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-claude.md` |
+| Windsurf (.md rule) | `https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-windsurf.md` |
 
 Copy the link for your editor, paste it to your agent, and say **"read this skill and install SlashGuard"**.
 

@@ -29,23 +29,13 @@ Your agent gets indexed access to your codebase - instant symbol lookup, call gr
 ## Install
 
 Tell your AI agent:
-> Read https://github.com/itsware-inc/slashguard and install SlashGuard
+> Read https://github.com/slashguard/slashguard and install SlashGuard
 
-Or pick the setup skill for your editor: [Cursor](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup.mdc) | [Claude Code](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-claude.md) | [Windsurf](https://raw.githubusercontent.com/itsware-inc/slashguard/main/setup/slashguard-setup-windsurf.md)
+Or pick the setup skill for your editor: [Cursor](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup.mdc) | [Claude Code](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-claude.md) | [Windsurf](https://raw.githubusercontent.com/slashguard/slashguard/main/setup/slashguard-setup-windsurf.md)
 
 Activate your license: `sg license activate YOUR_KEY`
 
 [Full install guide](INSTALL.md) | [Usage guide](USAGE.md)
-
-## GitHub Actions CI
-
-Automated code review on every pull request — no IDE needed.
-
-1. Copy [workflow template](docs/workflow-template.yml) to `.github/workflows/slashguard-review.yml`
-2. Set 3 secrets: `ANTHROPIC_API_KEY`, `SG_LICENSE_DAT`, `SG_REPO_TOKEN`
-3. Open a PR — SlashGuard reviews automatically
-
-See [CI Setup Guide](docs/ci-setup.md) for full instructions.
 
 ## Downloads
 

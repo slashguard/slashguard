@@ -64,45 +64,50 @@ Also check env vars (`CURSOR_*`, `CLAUDE_*`, `WINDSURF_*`) as fallback.
 
    All IDEs use GLOBAL config — install once, works in every project.
 
+   **IMPORTANT:** Use ABSOLUTE paths in the config — `~` does not expand in JSON values.
+   Determine the user's home directory first: run `echo $HOME` (macOS/Linux) or `echo %LOCALAPPDATA%` (Windows).
+
    **Cursor** — create/merge `~/.cursor/mcp.json` (GLOBAL):
    ```json
    {
      "mcpServers": {
        "slashguard": {
-         "command": "~/.slashguard/bin/sg",
+         "command": "$HOME/.slashguard/bin/sg",
          "args": ["serve"],
-         "env": { "SG_EDITOR": "cursor", "SG_LOG_FILE": "~/.slashguard/sg-mcp.log" }
+         "env": { "SG_EDITOR": "cursor", "SG_LOG_FILE": "$HOME/.slashguard/sg-mcp.log" }
        }
      }
    }
    ```
+   Replace `$HOME` with the actual path (e.g. `/Users/admin`). No `--repo` needed — SlashGuard auto-detects the workspace.
 
    **Claude Code** — create/merge `~/.claude/settings.local.json` (GLOBAL):
    ```json
    {
      "mcpServers": {
        "slashguard": {
-         "command": "HOME/.slashguard/bin/sg",
+         "command": "$HOME/.slashguard/bin/sg",
          "args": ["serve"],
-         "env": { "SG_EDITOR": "claude-code", "SG_LOG_FILE": "HOME/.slashguard/sg-mcp.log" }
+         "env": { "SG_EDITOR": "claude-code", "SG_LOG_FILE": "$HOME/.slashguard/sg-mcp.log" }
        }
      }
    }
    ```
-   Replace `HOME` with the actual home directory path (e.g. `/Users/admin`). Claude Code does NOT expand `~`.
+   Replace `$HOME` with the actual path. Claude Code does NOT expand `~` or `${userHome}`.
 
    **Windsurf** — create/merge `~/.windsurf/mcp.json` (GLOBAL):
    ```json
    {
      "mcpServers": {
        "slashguard": {
-         "command": "~/.slashguard/bin/sg",
+         "command": "$HOME/.slashguard/bin/sg",
          "args": ["serve"],
-         "env": { "SG_EDITOR": "windsurf", "SG_LOG_FILE": "~/.slashguard/sg-mcp.log" }
+         "env": { "SG_EDITOR": "windsurf", "SG_LOG_FILE": "$HOME/.slashguard/sg-mcp.log" }
        }
      }
    }
    ```
+   Replace `$HOME` with the actual path.
 
    **Windows — all IDEs:** Use resolved absolute paths. `~` and `%VARS%` are NOT expanded in JSON config values.
    Resolve the install directory first (e.g. `%LOCALAPPDATA%\SlashGuard`), then use the full path with double backslashes:
@@ -167,12 +172,12 @@ Also check env vars (`CURSOR_*`, `CLAUDE_*`, `WINDSURF_*`) as fallback.
 
 **With `gh` CLI (preferred):**
 ```bash
-gh release view --repo itsware-inc/slashguard --json tagName -q .tagName
+gh release view --repo slashguard/slashguard --json tagName -q .tagName
 ```
 
 **Without `gh` — use curl + GitHub API:**
 ```bash
-curl -sL https://api.github.com/repos/itsware-inc/slashguard/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'
+curl -sL https://api.github.com/repos/slashguard/slashguard/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/'
 ```
 
 3. If already on latest, tell the user and stop.
@@ -187,7 +192,7 @@ If version check fails, diagnose the cause:
 | `HTTP 404` or `release not found` | Repo doesn't exist at that URL | Tell user: check the repo name. Stop. |
 | `HTTP 401` / `Bad credentials` | Not authenticated | Tell user: run `gh auth login` or set `GITHUB_TOKEN`. Stop. |
 | `HTTP 403` / `rate limit` | API rate limited (unauthenticated) | Tell user: authenticate to raise rate limits — `gh auth login` or export `GITHUB_TOKEN`. Stop. |
-| `HTTP 403` / `not authorized` | Authenticated but no repo access | Tell user: they need access to `itsware-inc/slashguard`. Contact the SlashGuard team. Stop. |
+| `HTTP 403` / `not authorized` | Authenticated but no repo access | Tell user: they need access to `slashguard/slashguard`. Contact the SlashGuard team. Stop. |
 | Network error / timeout | No internet | Tell user. Stop. |
 
 **Do NOT silently continue** on any error — always show the exact error and stop.
@@ -203,14 +208,14 @@ If version check fails, diagnose the cause:
 
    **With `gh`:**
    ```bash
-   gh release download --repo itsware-inc/slashguard --pattern "slashguard-${OS}-${ARCH}.zip"
+   gh release download --repo slashguard/slashguard --pattern "slashguard-${OS}-${ARCH}.zip"
    ```
 
    **Without `gh` — use curl:**
    ```bash
-   VERSION=$(curl -sL https://api.github.com/repos/itsware-inc/slashguard/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
+   VERSION=$(curl -sL https://api.github.com/repos/slashguard/slashguard/releases/latest | grep '"tag_name"' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
    curl -sL -o "slashguard-${OS}-${ARCH}.zip" \
-     "https://github.com/itsware-inc/slashguard/releases/download/${VERSION}/slashguard-${OS}-${ARCH}.zip"
+     "https://github.com/slashguard/slashguard/releases/download/${VERSION}/slashguard-${OS}-${ARCH}.zip"
    ```
 
    If the download returns a 404, the platform zip may not exist for this release. Tell the user.
