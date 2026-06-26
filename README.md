@@ -1,7 +1,8 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/SlashGuard-Logo.png">
-    <img src="assets/SlashGuard-Logo.png" alt="SlashGuard" width="400" style="background-color: #12110F; padding: 16px 24px; border-radius: 8px;">
+    <source media="(prefers-color-scheme: light)" srcset="assets/SlashGuard-Logo-dark.png">
+    <img src="assets/SlashGuard-Logo-dark.png" alt="SlashGuard" width="400">
   </picture>
 </p>
 
