@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" alt="SlashGuard" width="400">
+  <img src="assets/SlashGuard-Logo.png" alt="SlashGuard" width="400">
 </p>
 
 <p align="center">
@@ -86,4 +86,4 @@ Proprietary. See [LICENSE](LICENSE).
 
 - [Install Guide](INSTALL.md)
 - [Usage Guide](USAGE.md)
-- [ItsWare](https://itsware.com)
+- [SlashGuard](https://slashguard.dev)

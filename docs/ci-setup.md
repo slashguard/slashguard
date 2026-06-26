@@ -17,7 +17,7 @@ No Docker needed. The `sg` binary runs natively on `ubuntu-latest`. The review t
 
 - **Anthropic API key** — for the Claude Code Action ([get one here](https://console.anthropic.com/))
 - **SlashGuard license** — a CI-policy license with no machine fingerprint binding
-- **GitHub repo access** — the workflow needs read access to `itsware-inc/slashguard` releases
+- **GitHub repo access** — the workflow needs read access to `slashguard/slashguard` releases
 
 ## Setup (3 steps)
 
@@ -28,10 +28,10 @@ Your repo needs three secrets:
 | Secret | What | How to get it |
 |--------|------|---------------|
 | `ANTHROPIC_API_KEY` | Anthropic API key | [console.anthropic.com](https://console.anthropic.com/) |
-| `SG_LICENSE_DAT` | Base64-encoded SlashGuard CI license | Provided by ItsWare — org-bound to your GitHub org |
-| `SG_REPO_TOKEN` | GitHub PAT with read access to `itsware-inc/slashguard` | [github.com/settings/tokens](https://github.com/settings/tokens) |
+| `SG_LICENSE_DAT` | Base64-encoded SlashGuard CI license | Provided by SlashGuard — org-bound to your GitHub org |
+| `SG_REPO_TOKEN` | GitHub PAT with read access to `slashguard/slashguard` | [github.com/settings/tokens](https://github.com/settings/tokens) |
 
-> **CI licenses are org-bound.** Each license is tied to a specific GitHub organization via `GITHUB_REPOSITORY_OWNER`. A license activated for `acme-corp` will only work in repos under `acme-corp/*`. Contact ItsWare for your org's license.
+> **CI licenses are org-bound.** Each license is tied to a specific GitHub organization via `GITHUB_REPOSITORY_OWNER`. A license activated for `acme-corp` will only work in repos under `acme-corp/*`. Contact SlashGuard for your org's license.
 
 Set them via CLI:
 ```bash

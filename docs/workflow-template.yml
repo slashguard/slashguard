@@ -34,7 +34,7 @@ jobs:
           SG_HOME="$HOME/.slashguard"
 
           gh release download latest \
-            --repo itsware-inc/slashguard \
+            --repo slashguard/slashguard \
             --pattern 'slashguard-linux-amd64.zip' \
             --dir /tmp
           unzip -o /tmp/slashguard-linux-amd64.zip -d "$SG_HOME"
