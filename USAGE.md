@@ -28,7 +28,7 @@ If your workspace has multiple git repos, the agent will ask which one to review
 
 ```
 review go_server PR 834
-lint changes in my-web-app
+lint changes in itsware-web-app
 ```
 
 ## Review Workflow

@@ -1,9 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/SlashGuard-Logo.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/SlashGuard-Logo-dark.png">
-    <img src="assets/SlashGuard-Logo-dark.png" alt="SlashGuard" width="400">
-  </picture>
+  <img src="assets/logo.svg" alt="SlashGuard" width="400">
 </p>
 
 <p align="center">
@@ -90,5 +86,4 @@ Proprietary. See [LICENSE](LICENSE).
 
 - [Install Guide](INSTALL.md)
 - [Usage Guide](USAGE.md)
-- [CI Setup Guide](CI-SETUP.md)
-- [SlashGuard](https://slashguard.dev)
+- [ItsWare](https://itsware.com)
