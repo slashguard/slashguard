@@ -59,6 +59,11 @@ if (-not (Test-Path $CustomDir)) {
     }
 }
 
+# Rules: copy to install dir so they survive temp cleanup
+$RulesDir = Join-Path $InstallDir "rules"
+New-Item -ItemType Directory -Path $RulesDir -Force | Out-Null
+Copy-Item (Join-Path $ExtractDir "rules\*") $RulesDir -Recurse -Force
+
 # --- PATH ---
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($UserPath -notlike "*SlashGuard*") {
@@ -82,8 +87,8 @@ Write-Host "  1. Configure MCP in your IDE (Cursor/Claude Code/Windsurf)"
 Write-Host "  2. Activate license: sg license activate <your-key>"
 Write-Host "  3. Restart your IDE"
 Write-Host ""
-Write-Host "Rule files are in: $ExtractDir\rules\"
+Write-Host "Rule files are in: $RulesDir\"
 Write-Host "Copy the ones for your IDE to your project's rules directory."
 
 # --- Cleanup ---
-Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
+Remove-Item $TmpDir -Recurse -Force -ErrorAction SilentlyContinue

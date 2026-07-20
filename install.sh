@@ -67,6 +67,10 @@ if [ ! -d "$PACKS_DIR/custom" ]; then
   cp -r "$TMP_DIR/sg/packs/custom" "$PACKS_DIR/custom" 2>/dev/null || true
 fi
 
+# Rules: copy to install dir so they survive temp cleanup
+mkdir -p "$INSTALL_DIR/rules"
+cp -r "$TMP_DIR/sg/rules/." "$INSTALL_DIR/rules/"
+
 # --- PATH ---
 if ! echo "$PATH" | tr ':' '\n' | grep -q '.slashguard/bin'; then
   SHELL_NAME=$(basename "$SHELL" 2>/dev/null || echo "sh")
@@ -96,5 +100,5 @@ echo "  1. Configure MCP in your IDE (Cursor/Claude Code/Windsurf)"
 echo "  2. Activate license: sg license activate <your-key>"
 echo "  3. Restart your IDE"
 echo ""
-echo "Rule files are in: $TMP_DIR/sg/rules/"
+echo "Rule files are in: $INSTALL_DIR/rules/"
 echo "Copy the ones for your IDE to your project's rules directory."
