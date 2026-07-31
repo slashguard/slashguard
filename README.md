@@ -86,4 +86,4 @@ Proprietary. See [LICENSE](LICENSE).
 
 - [Install Guide](INSTALL.md)
 - [Usage Guide](USAGE.md)
-- [ItsWare](https://itsware.com)
+- [SlashGuard](https://github.com/slashguard/slashguard)
